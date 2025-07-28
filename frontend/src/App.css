@@ -1,0 +1,15 @@
+.App {
+  text-align: center;
+}
+
+.feature-card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+}
+
+.status-box {
+  border-left: 4px solid #1976d2;
+} 
