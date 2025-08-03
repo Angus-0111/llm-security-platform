@@ -76,12 +76,12 @@ COMPX576_Project/
 5. Start development servers
 
 ## Key Features
-- 🎯 Attack Simulation: Support for multiple LLM attack types
-- 📊 Data Visualization: Interactive charts and dashboards
-- 🔍 Output Comparison: Original vs attacked output comparison
-- 📈 Risk Assessment: Automated risk scoring and reports
-- 📚 Knowledge Base: LLM security threats and case studies
-- 🔒 User Management: Role-based access control
+- Attack Simulation: Support for multiple LLM attack types
+- Data Visualization: Interactive charts and dashboards
+- Output Comparison: Original vs attacked output comparison
+- Risk Assessment: Automated risk scoring and reports
+- Knowledge Base: LLM security threats and case studies
+- User Management: Role-based access control
 
 ## Development Guide
 Detailed development guides can be found in the `docs/` directory. 
