@@ -51,6 +51,24 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// =================
+// SIMULATION API
+// =================
+const { runSimulation } = require('./services/llm/simulationService');
+
+app.post('/api/simulations/run', async (req, res) => {
+  try {
+    const { originalPrompt, attackPrompt, systemPrompt, options } = req.body;
+    if (!originalPrompt || !attackPrompt) {
+      return res.status(400).json({ status: 'error', message: 'originalPrompt and attackPrompt are required' });
+    }
+    const result = await runSimulation({ originalPrompt, attackPrompt, systemPrompt, options });
+    return res.json({ status: 'success', data: result });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+});
+
 // Simple database test route
 app.get('/api/database-test', async (req, res) => {
   try {
