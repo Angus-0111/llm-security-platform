@@ -54,7 +54,7 @@ app.get('/api/health', (req, res) => {
 // =================
 // SIMULATION API
 // =================
-const { runSimulation } = require('./services/llm/simulationService');
+const { runSimulation, runSimulationFromTemplate } = require('./services/llm/simulationService');
 
 app.post('/api/simulations/run', async (req, res) => {
   try {
@@ -63,6 +63,86 @@ app.post('/api/simulations/run', async (req, res) => {
       return res.status(400).json({ status: 'error', message: 'originalPrompt and attackPrompt are required' });
     }
     const result = await runSimulation({ originalPrompt, attackPrompt, systemPrompt, options });
+    return res.json({ status: 'success', data: result });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+});
+
+// GET - Retrieve simulation history
+app.get('/api/simulations/history', async (req, res) => {
+  try {
+    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
+    const skip = (page - 1) * limit;
+    
+    // Build sort object
+    const sort = {};
+    sort[sortBy] = sortOrder === 'desc' ? -1 : 1;
+    
+    // Query with pagination
+    const simulations = await LLMResponse.find({})
+      .sort(sort)
+      .skip(skip)
+      .limit(parseInt(limit))
+      .select('-__v')
+      .lean();
+    
+    // Get total count
+    const total = await LLMResponse.countDocuments({});
+    
+    res.json({
+      status: 'success',
+      data: {
+        simulations,
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+});
+
+// GET - Retrieve specific simulation by ID
+app.get('/api/simulations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const simulation = await LLMResponse.findById(id).lean();
+    
+    if (!simulation) {
+      return res.status(404).json({ status: 'error', message: 'Simulation not found' });
+    }
+    
+    res.json({
+      status: 'success',
+      data: simulation
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+});
+
+// POST - Run simulation from AttackData template
+app.post('/api/simulations/run-from-template', async (req, res) => {
+  try {
+    const { attackDataId, systemPrompt, options } = req.body;
+    
+    if (!attackDataId) {
+      return res.status(400).json({ 
+        status: 'error', 
+        message: 'attackDataId is required' 
+      });
+    }
+    
+    const result = await runSimulationFromTemplate(attackDataId, {
+      systemPrompt,
+      ...options
+    });
+    
     return res.json({ status: 'success', data: result });
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });
