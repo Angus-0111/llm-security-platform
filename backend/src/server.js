@@ -1044,6 +1044,73 @@ app.get('/api/reports/:id/summary', async (req, res) => {
 });
 
 // =================
+// AUTOMATED REPORT GENERATION APIs
+// =================
+
+const { 
+  generateAttackAnalysisReport, 
+  generateRiskSummaryReport, 
+  generateEducationalImpactReport 
+} = require('./services/report-generation/reportService');
+
+// POST - Generate attack analysis report
+app.post('/api/reports/generate/attack-analysis', async (req, res) => {
+  try {
+    const parameters = req.body || {};
+    const report = await generateAttackAnalysisReport(parameters);
+    
+    res.status(201).json({
+      status: 'success',
+      message: 'Attack analysis report generated successfully',
+      data: report
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
+// POST - Generate risk summary report
+app.post('/api/reports/generate/risk-summary', async (req, res) => {
+  try {
+    const parameters = req.body || {};
+    const report = await generateRiskSummaryReport(parameters);
+    
+    res.status(201).json({
+      status: 'success',
+      message: 'Risk summary report generated successfully',
+      data: report
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
+// POST - Generate educational impact report
+app.post('/api/reports/generate/educational-impact', async (req, res) => {
+  try {
+    const parameters = req.body || {};
+    const report = await generateEducationalImpactReport(parameters);
+    
+    res.status(201).json({
+      status: 'success',
+      message: 'Educational impact report generated successfully',
+      data: report
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
+// =================
 // TEST DATA APIs (Legacy)
 // =================
 

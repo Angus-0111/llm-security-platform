@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import NewsIncidentDisplay from './components/NewsIncidentDisplay';
 import AttackSimulation from './components/AttackSimulation';
+import RiskAssessmentDisplay from './components/RiskAssessment/RiskAssessmentDisplay';
+import ReportGeneration from './components/Reports/ReportGeneration';
 import './App.css';
 
 const theme = createTheme({
@@ -48,6 +50,8 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/simulation" element={<AttackSimulation />} />
             <Route path="/incidents" element={<NewsIncidentDisplay />} />
+            <Route path="/risk-assessment" element={<RiskAssessmentDisplay />} />
+            <Route path="/reports" element={<ReportGeneration />} />
           </Routes>
         </Layout>
       </BrowserRouter>

@@ -8,7 +8,7 @@ import {
   CardContent,
   Button
 } from '@mui/material';
-import { Security, Visibility, Assessment, Newspaper } from '@mui/icons-material';
+import { Security, Visibility, Assessment, Newspaper, BarChart } from '@mui/icons-material';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -77,8 +77,8 @@ const Dashboard = () => {
                 mitigation recommendations for educational contexts.
               </Typography>
               <Box sx={{ mt: 2 }}>
-                <Button variant="outlined" size="small" disabled>
-                  Coming soon
+                <Button variant="outlined" size="small" onClick={() => navigate('/risk-assessment')}>
+                  Go to Risk Assessment
                 </Button>
               </Box>
             </CardContent>
@@ -103,6 +103,26 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <BarChart color="primary" sx={{ mr: 1 }} />
+                <Typography variant="h6">Report Generation</Typography>
+              </Box>
+              <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1 }}>
+                Generate comprehensive security reports from simulation data
+                and risk assessments for analysis and sharing.
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                <Button variant="outlined" size="small" onClick={() => navigate('/reports')}>
+                  Go to Report Generation
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
 
       <Box sx={{ mt: 4, p: 3, bgcolor: 'grey.100', borderRadius: 1 }}>
@@ -112,8 +132,9 @@ const Dashboard = () => {
         <Typography variant="body2">
           Backend and database connected<br/>
           Real incident data integrated (NewsIncident)<br/>
-          <strong>NEW:</strong> Attack Simulation MVP is live (OpenAI integration)<br/>
-          Navigation: Dashboard, Attack Simulation, Real Incident Case
+          Attack Simulation MVP with LLM integration<br/>
+          <strong>NEW:</strong> Risk Assessment & Report Generation (Week 7)<br/>
+          Available: Dashboard, Attack Simulation, Risk Assessment, Report Generation, Real Incident Case
         </Typography>
       </Box>
     </Box>
