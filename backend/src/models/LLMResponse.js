@@ -10,6 +10,20 @@ const LLMResponseSchema = new mongoose.Schema({
     index: true
   },
   
+  // Attack type and education scenario for easy querying
+  attackType: {
+    type: String,
+    required: true,
+    default: 'Custom Attack',
+    index: true
+  },
+  educationScenario: {
+    type: String,
+    required: true,
+    default: 'General Context',
+    index: true
+  },
+  
   // LLM basic information
   modelInfo: {
     name: {
@@ -206,13 +220,18 @@ const LLMResponseSchema = new mongoose.Schema({
     },
     successType: {
       type: String,
-      enum: ['full_bypass', 'partial_bypass', 'content_injection', 'behavior_change', 'information_extraction', 'failed']
+      enum: ['full_bypass', 'partial_bypass', 'content_injection', 'behavior_change', 'information_extraction', 'template_success', 'failed']
     },
     evidencePoints: [String],
     successScore: {
       type: Number,
       min: 0,
       max: 10
+    },
+    confidence: {
+      type: Number,
+      min: 0,
+      max: 1
     }
   },
   

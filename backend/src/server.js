@@ -440,6 +440,95 @@ app.get('/api/llm-responses/high-risk', async (req, res) => {
 });
 
 // =================
+// ANALYTICS APIs
+// =================
+
+// GET - Simulation trend analytics (group by day/week/month)
+app.get('/api/analytics/simulations/trend', async (req, res) => {
+  try {
+    const {
+      startDate,
+      endDate,
+      groupBy = 'day', // 'day' | 'week' | 'month'
+      modelName,
+      attackType,
+      educationScenario
+    } = req.query;
+
+    const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const end = endDate ? new Date(endDate) : new Date();
+
+    const match = {
+      createdAt: { $gte: start, $lte: end }
+    };
+
+    if (modelName) {
+      match['modelInfo.name'] = modelName;
+    }
+    if (attackType) {
+      match['attackSuccess.successType'] = attackType; // fallback if stored; primary type may be on AttackData
+    }
+    if (educationScenario) {
+      match['metadata.tags'] = educationScenario; // optional tagging-based filter if present
+    }
+
+    let groupExpr;
+    if (groupBy === 'month') {
+      groupExpr = { $dateToString: { format: '%Y-%m', date: '$createdAt' } };
+    } else if (groupBy === 'week') {
+      // ISO week number (YYYY-WW)
+      groupExpr = { $dateToString: { format: '%G-%V', date: '$createdAt' } };
+    } else {
+      // default to day
+      groupExpr = { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } };
+    }
+
+    const pipeline = [
+      { $match: match },
+      {
+        $group: {
+          _id: groupExpr,
+          total: { $sum: 1 },
+          successes: { $sum: { $cond: ['$attackSuccess.isSuccessful', 1, 0] } },
+          avgSuccessScore: { $avg: '$attackSuccess.successScore' }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          period: '$_id',
+          total: 1,
+          successes: 1,
+          successRate: {
+            $cond: [
+              { $gt: ['$total', 0] },
+              { $multiply: [{ $divide: ['$successes', '$total'] }, 100] },
+              0
+            ]
+          },
+          avgSuccessScore: 1
+        }
+      },
+      { $sort: { period: 1 } }
+    ];
+
+    const results = await LLMResponse.aggregate(pipeline);
+
+    res.json({
+      status: 'success',
+      data: results,
+      meta: {
+        startDate: start,
+        endDate: end,
+        groupBy
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+});
+
+// =================
 // RISK ASSESSMENT APIs
 // =================
 
@@ -467,9 +556,18 @@ app.get('/api/risk-assessments', async (req, res) => {
       .limit(parseInt(limit))
       .skip(parseInt(skip));
     
+    // Get total count for pagination
+    const total = await RiskAssessment.countDocuments(query);
+    
     res.json({
       status: 'success',
-      data: assessments
+      data: assessments,
+      pagination: {
+        total,
+        page: Math.floor(parseInt(skip) / parseInt(limit)) + 1,
+        limit: parseInt(limit),
+        pages: Math.ceil(total / parseInt(limit))
+      }
     });
   } catch (error) {
     res.status(500).json({

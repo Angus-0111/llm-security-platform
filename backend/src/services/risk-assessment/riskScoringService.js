@@ -68,7 +68,7 @@ function calculateRiskScore(simulationData) {
       riskFactors.privacy.personalInfoRisk = {
         score: baseScore,
         severity: getSevertiyLevel(baseScore),
-        infoTypes: isSuccessful ? ['educational', 'personal'] : [],
+        infoTypes: isSuccessful ? ['educational', 'pii'] : [],
         complianceIssues: isSuccessful ? ['FERPA concerns', 'Privacy policy violations'] : []
       };
       break;
