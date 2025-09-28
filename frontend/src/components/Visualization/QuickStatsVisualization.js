@@ -63,7 +63,7 @@ const QuickStatsVisualization = () => {
       setLoading(true);
       
       // Fetch attack templates first
-      const templatesResponse = await fetch('http://localhost:3001/api/attack-data');
+      const templatesResponse = await fetch('/api/attack-data');
       const templatesData = await templatesResponse.json();
       
       if (templatesData.status === 'success') {
@@ -71,7 +71,7 @@ const QuickStatsVisualization = () => {
       }
       
       // Fetch simulation data
-      const response = await fetch('http://localhost:3001/api/simulations/history?limit=200');
+      const response = await fetch('/api/simulations/history?limit=200');
       const data = await response.json();
       
       if (data.status === 'success') {

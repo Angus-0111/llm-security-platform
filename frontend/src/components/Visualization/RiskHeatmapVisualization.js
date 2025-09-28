@@ -49,11 +49,11 @@ const RiskHeatmapVisualization = () => {
       setLoading(true);
       
       // Fetch simulation data
-      const simulationResponse = await fetch('http://localhost:3001/api/simulations/history?limit=100');
+      const simulationResponse = await fetch('/api/simulations/history?limit=100');
       const simulationData = await simulationResponse.json();
       
       // Fetch risk assessment data
-      const riskResponse = await fetch('http://localhost:3001/api/risk-assessments?limit=100');
+      const riskResponse = await fetch('/api/risk-assessments?limit=100');
       const riskData = await riskResponse.json();
       
       if (simulationData.status === 'success' && riskData.status === 'success') {

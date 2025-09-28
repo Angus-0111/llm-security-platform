@@ -45,8 +45,8 @@ const AttackFlowVisualization = () => {
       setLoading(true);
       // 同时获取模拟数据和模板数据
       const [simulationsResponse, templatesResponse] = await Promise.all([
-        fetch('http://localhost:3001/api/simulations/history?limit=20'),
-        fetch('http://localhost:3001/api/attack-data')
+        fetch('/api/simulations/history?limit=20'),
+        fetch('/api/attack-data')
       ]);
       
       const simulationsData = await simulationsResponse.json();

@@ -42,9 +42,9 @@ const InteractiveChartsVisualization = () => {
       
       // Fetch multiple data sources
       const [simulationsRes, riskRes, analyticsRes] = await Promise.all([
-        fetch('http://localhost:3001/api/simulations/history?limit=100'),
-        fetch('http://localhost:3001/api/risk-assessments?limit=100'),
-        fetch(`http://localhost:3001/api/analytics/simulations/trend?groupBy=${timeRange}`)
+        fetch('/api/simulations/history?limit=100'),
+        fetch('/api/risk-assessments?limit=100'),
+        fetch(`/api/analytics/simulations/trend?groupBy=${timeRange}`)
       ]);
 
       const [simulationsData, riskData, analyticsData] = await Promise.all([

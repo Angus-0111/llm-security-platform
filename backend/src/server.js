@@ -58,11 +58,19 @@ const { runSimulation, runSimulationFromTemplate } = require('./services/llm/sim
 
 app.post('/api/simulations/run', async (req, res) => {
   try {
-    const { originalPrompt, attackPrompt, systemPrompt, options } = req.body;
+    const { originalPrompt, attackPrompt, systemPrompt, attackType, educationScenario, options } = req.body;
     if (!originalPrompt || !attackPrompt) {
       return res.status(400).json({ status: 'error', message: 'originalPrompt and attackPrompt are required' });
     }
-    const result = await runSimulation({ originalPrompt, attackPrompt, systemPrompt, options });
+    
+    // Merge attackType and educationScenario into options
+    const enhancedOptions = {
+      ...options,
+      attackType,
+      educationScenario
+    };
+    
+    const result = await runSimulation({ originalPrompt, attackPrompt, systemPrompt, options: enhancedOptions });
     return res.json({ status: 'success', data: result });
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });

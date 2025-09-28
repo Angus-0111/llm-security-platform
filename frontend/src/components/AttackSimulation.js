@@ -156,7 +156,7 @@ const AttackSimulation = () => {
   const fetchTemplates = async () => {
     setTemplateLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/api/attack-data');
+      const res = await fetch('/api/attack-data');
       const data = await res.json();
       if (res.ok && data.status === 'success') {
         setTemplates(data.data);
@@ -213,7 +213,7 @@ const AttackSimulation = () => {
   const fetchHistory = async () => {
     setHistoryLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/api/simulations/history');
+      const res = await fetch('/api/simulations/history');
       const data = await res.json();
       if (res.ok && data.status === 'success') {
         setHistory(data.data.simulations);
@@ -284,7 +284,7 @@ const AttackSimulation = () => {
     
     try {
       const t = templates.find(t => t._id === selectedTemplate);
-      const res = await fetch('http://localhost:3001/api/simulations/run-from-template', {
+      const res = await fetch('/api/simulations/run-from-template', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -337,7 +337,7 @@ const AttackSimulation = () => {
     setResult(null);
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/api/simulations/run', {
+      const res = await fetch('/api/simulations/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

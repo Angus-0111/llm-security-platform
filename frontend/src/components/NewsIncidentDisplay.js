@@ -78,7 +78,7 @@ const NewsIncidentDisplay = () => {
   const fetchNewsIncidents = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3001/api/news-incidents');
+      const response = await fetch('/api/news-incidents');
       const data = await response.json();
       
       if (data.status === 'success') {
