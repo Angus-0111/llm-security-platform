@@ -1,62 +1,62 @@
-# 🚀 LLM Security Platform - AWS部署指南
+# LLM Security Platform - AWS Deployment Guide
 
-## 📋 部署前准备
+## Before Deployment
 
-### 1. 环境要求
-- Docker 20.10+
-- Docker Compose 2.0+
-- AWS CLI 2.0+
-- Node.js 18+ (本地开发)
+### Requirements
+- Docker 20.10 or higher
+- Docker Compose 2.0 or higher
+- AWS CLI 2.0 or higher
+- Node.js 18 or higher for local development
 
-### 2. AWS账户准备
-- AWS账户和访问密钥
-- 选择部署区域 (推荐: us-east-1, us-west-2)
-- 准备域名 (可选，用于生产环境)
+### AWS Account Setup
+- AWS account with access keys
+- Choose deployment region (recommended: us-east-1 or us-west-2)
+- Optional: domain name for production
 
-## 🐳 Docker本地测试
+## Local Docker Testing
 
-### 1. 环境变量配置
+### Environment Setup
 ```bash
-# 复制环境变量模板
+# Copy template file
 cp env.example .env
 
-# 编辑环境变量
+# Edit variables
 nano .env
 ```
 
-**必需的环境变量:**
+Required variables:
 ```bash
 OPENAI_API_KEY=your_openai_api_key_here
 MONGO_ROOT_PASSWORD=securepassword123
 ```
 
-### 2. 本地Docker测试
+### Local Testing
 ```bash
-# 构建并启动所有服务
+# Build and start services
 docker-compose up --build
 
-# 后台运行
+# Run in background
 docker-compose up -d
 
-# 查看日志
+# View logs
 docker-compose logs -f
 
-# 停止服务
+# Stop services
 docker-compose down
 ```
 
-### 3. 验证部署
-- 前端: http://localhost:3000
-- 后端API: http://localhost:3001
-- 健康检查: http://localhost:3001/api/health
+### Check Deployment
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:3001
+- Health check: http://localhost:3001/api/health
 
-## ☁️ AWS部署方案
+## AWS Deployment Options
 
-### 方案A: EC2 + Docker Compose (推荐新手)
+### Option A: EC2 with Docker Compose (Easiest)
 
-#### 1. 创建EC2实例
+#### Create EC2 Instance
 ```bash
-# 使用AWS CLI创建实例
+# Using AWS CLI
 aws ec2 run-instances \
   --image-id ami-0c02fb55956c7d316 \
   --instance-type t3.medium \
@@ -66,72 +66,72 @@ aws ec2 run-instances \
   --user-data file://deploy/user-data.sh
 ```
 
-#### 2. 部署应用
+#### Deploy Application
 ```bash
-# 上传代码到EC2
+# Upload code to EC2
 scp -i your-key.pem -r . ec2-user@your-ec2-ip:/home/ec2-user/app
 
-# SSH连接到EC2
+# Connect via SSH
 ssh -i your-key.pem ec2-user@your-ec2-ip
 
-# 在EC2上启动应用
+# Start application
 cd /home/ec2-user/app
 docker-compose up -d
 ```
 
-### 方案B: ECS + Fargate (推荐生产环境)
+### Option B: ECS with Fargate (Production)
 
-#### 1. 创建ECR仓库
+#### Create ECR Repository
 ```bash
-# 创建后端仓库
+# Backend repository
 aws ecr create-repository --repository-name llm-security-backend
 
-# 创建前端仓库
+# Frontend repository
 aws ecr create-repository --repository-name llm-security-frontend
 ```
 
-#### 2. 推送镜像
+#### Push Images
 ```bash
-# 设置环境变量
+# Set variables
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export AWS_REGION=us-east-1
 
-# 运行部署脚本
+# Run deploy script
 chmod +x deploy/aws-deploy.sh
 ./deploy/aws-deploy.sh
 ```
 
-#### 3. 创建ECS服务
+#### Create ECS Service
 ```bash
-# 使用AWS控制台或CLI创建ECS集群和服务
+# Create cluster
 aws ecs create-cluster --cluster-name llm-security-cluster
 ```
 
-### 方案C: Elastic Beanstalk (最简单)
+### Option C: Elastic Beanstalk (Simplest)
 
-#### 1. 准备部署包
+#### Prepare Package
 ```bash
-# 创建部署包
+# Create zip file
 zip -r llm-security-platform.zip . -x "*.git*" "node_modules/*" "*.log"
 ```
 
-#### 2. 上传到Elastic Beanstalk
-- 登录AWS控制台
-- 创建新的Elastic Beanstalk应用
-- 上传部署包
-- 配置环境变量
+#### Upload to Beanstalk
+- Log in to AWS console
+- Create new Elastic Beanstalk application
+- Upload package
+- Set environment variables
 
-## 🗄️ 数据库选项
+## Database Options
 
-### 选项1: MongoDB Atlas (推荐)
+### MongoDB Atlas (Recommended)
 ```bash
-# 在.env中配置
+# In .env file
 AWS_MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/llm-security-platform
 ```
 
-### 选项2: AWS DocumentDB
+### AWS DocumentDB
 ```bash
-# 创建DocumentDB集群
+# Create cluster
 aws docdb create-db-cluster \
   --db-cluster-identifier llm-security-cluster \
   --engine docdb \
@@ -139,103 +139,102 @@ aws docdb create-db-cluster \
   --master-user-password your-password
 ```
 
-### 选项3: 自托管MongoDB (Docker)
+### Self Hosted MongoDB (Docker)
 ```yaml
-# 在docker-compose.yml中已配置
+# Already in docker-compose.yml
 mongodb:
   image: mongo:6.0
-  # ... 配置
 ```
 
-## 🔒 安全配置
+## Security Setup
 
-### 1. SSL证书 (生产环境)
+### SSL Certificate (Production)
 ```bash
-# 使用AWS Certificate Manager
+# Use AWS Certificate Manager
 aws acm request-certificate \
   --domain-name your-domain.com \
   --validation-method DNS
 ```
 
-### 2. 安全组配置
+### Security Group
 ```bash
-# 只允许必要端口
+# Allow only needed ports
 - HTTP: 80
 - HTTPS: 443
-- SSH: 22 (仅管理用)
+- SSH: 22 (management only)
 ```
 
-### 3. 环境变量安全
+### Environment Security
 ```bash
-# 使用AWS Systems Manager Parameter Store
+# Use AWS Systems Manager
 aws ssm put-parameter \
   --name "/llm-security/openai-api-key" \
   --value "your-api-key" \
   --type "SecureString"
 ```
 
-## 📊 监控和日志
+## Monitoring
 
-### 1. CloudWatch监控
+### CloudWatch
 ```bash
-# 创建CloudWatch仪表板
+# Create dashboard
 aws cloudwatch put-dashboard \
   --dashboard-name "LLM-Security-Platform" \
   --dashboard-body file://monitoring/dashboard.json
 ```
 
-### 2. 日志收集
+### Logs
 ```bash
-# 配置CloudWatch日志组
+# Create log group
 aws logs create-log-group \
   --log-group-name "/aws/ecs/llm-security-platform"
 ```
 
-## 🚀 生产环境最佳实践
+## Best Practices
 
-### 1. 自动扩缩容
-- 配置ECS Auto Scaling
-- 设置CPU/内存阈值
-- 配置负载均衡器
+### Auto Scaling
+- Set up ECS Auto Scaling
+- Define CPU and memory thresholds
+- Add load balancer
 
-### 2. 备份策略
-- 定期备份MongoDB数据
-- 配置S3存储备份
-- 测试恢复流程
+### Backup
+- Regular MongoDB backups
+- Store backups in S3
+- Test recovery process
 
-### 3. 更新部署
+### Updates
 ```bash
-# 零停机更新
+# Update without downtime
 docker-compose up -d --no-deps frontend
 docker-compose up -d --no-deps backend
 ```
 
-## 🔧 故障排除
+## Troubleshooting
 
-### 常见问题
-1. **端口冲突**: 检查安全组和端口配置
-2. **数据库连接失败**: 验证MongoDB URI和网络配置
-3. **OpenAI API错误**: 检查API密钥和配额
-4. **内存不足**: 升级实例类型或优化应用
+### Common Problems
+1. Port conflicts: Check security group settings
+2. Database connection fails: Check MongoDB URI and network
+3. OpenAI API errors: Verify API key and quota
+4. Out of memory: Upgrade instance or optimize app
 
-### 日志查看
+### View Logs
 ```bash
-# Docker日志
+# Docker logs
 docker-compose logs backend
 docker-compose logs frontend
 
-# AWS CloudWatch日志
+# CloudWatch logs
 aws logs describe-log-groups
 aws logs get-log-events --log-group-name "/aws/ecs/llm-security-platform"
 ```
 
-## 📞 支持
+## Support
 
-如有问题，请检查：
-1. AWS文档和最佳实践
-2. Docker和Docker Compose文档
-3. 项目GitHub Issues
+Check these resources:
+1. AWS documentation
+2. Docker and Docker Compose docs
+3. Project GitHub Issues
 
 ---
 
-**部署成功后，您的LLM Security Platform将在AWS上运行！** 🎉
+After deployment, your platform runs on AWS.

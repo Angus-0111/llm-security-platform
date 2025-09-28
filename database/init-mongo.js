@@ -1,7 +1,7 @@
-// MongoDB初始化脚本
+// MongoDB initialization script
 db = db.getSiblingDB('llm-security-platform');
 
-// 创建应用用户
+// Create app user
 db.createUser({
   user: 'app_user',
   pwd: 'app_password_123',
@@ -13,7 +13,7 @@ db.createUser({
   ]
 });
 
-// 创建索引以提高查询性能
+// Create indexes for better query performance
 db.llmresponses.createIndex({ "createdAt": -1 });
 db.llmresponses.createIndex({ "attackType": 1 });
 db.llmresponses.createIndex({ "educationScenario": 1 });

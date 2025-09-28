@@ -1,18 +1,18 @@
 #!/bin/bash
 
-# 快速部署脚本 - 在EC2上运行
-echo "🚀 开始快速部署..."
+#  - EC2
+echo " ..."
 
-# 1. 更新系统并确保Docker运行
+# 1. Docker
 sudo yum update -y
 sudo systemctl start docker
 sudo usermod -a -G docker ec2-user
 
-# 2. 创建应用目录
+# 2. 
 mkdir -p ~/app
 cd ~/app
 
-# 3. 创建docker-compose.yml
+# 3. docker-compose.yml
 cat > docker-compose.yml << 'EOF'
 version: '3.8'
 
@@ -81,7 +81,7 @@ networks:
     driver: bridge
 EOF
 
-# 4. 创建简化的后端结构
+# 4. 
 mkdir -p backend/src
 cat > backend/package.json << 'EOF'
 {
@@ -101,7 +101,7 @@ cat > backend/package.json << 'EOF'
 }
 EOF
 
-# 5. 创建简化的前端结构
+# 5. 
 mkdir -p frontend/src frontend/public
 cat > frontend/package.json << 'EOF'
 {
@@ -120,9 +120,9 @@ cat > frontend/package.json << 'EOF'
 }
 EOF
 
-echo "✅ 基础配置完成!"
-echo "📋 接下来需要:"
-echo "1. 上传完整的源代码"
-echo "2. 配置OpenAI API密钥"
-echo "3. 启动服务"
+echo " !"
+echo " :"
+echo "1. "
+echo "2. OpenAI API"
+echo "3. "
 EOF

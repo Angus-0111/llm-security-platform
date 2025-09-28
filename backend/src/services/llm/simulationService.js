@@ -792,7 +792,7 @@ async function runSimulation({ originalPrompt, attackPrompt, systemPrompt, optio
       });
 
       riskAssessmentId = riskAssessment._id;
-      console.log(`✅ Risk assessment created successfully with ID: ${riskAssessment._id}`);
+      console.log(` Risk assessment created successfully with ID: ${riskAssessment._id}`);
       
     } catch (riskError) {
       riskAssessmentError = riskError;

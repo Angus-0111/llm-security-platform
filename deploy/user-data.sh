@@ -1,40 +1,40 @@
 #!/bin/bash
 
-# 更新系统
+# 
 yum update -y
 
-# 安装Docker
+# Docker
 yum install -y docker git
 systemctl start docker
 systemctl enable docker
 usermod -a -G docker ec2-user
 
-# 安装Docker Compose
+# Docker Compose
 curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
-# 创建应用目录
+# 
 mkdir -p /home/ec2-user/app
 cd /home/ec2-user/app
 
-# 克隆应用代码 (需要您提供GitHub仓库URL)
+#  (GitHubURL)
 # git clone https://github.com/your-username/llm-security-platform.git .
 
-# 创建环境变量文件
+# 
 cat > .env << EOF
-# MongoDB配置
+# MongoDB
 MONGO_ROOT_PASSWORD=securepassword123
 
-# OpenAI API配置 (需要用户提供)
+# OpenAI API ()
 OPENAI_API_KEY=your_openai_api_key_here
 
-# 应用配置
+# 
 NODE_ENV=production
 FRONTEND_URL=http://localhost:3000
 EOF
 
-# 创建Docker Compose文件
+# Docker Compose
 cat > docker-compose.yml << 'EOF'
 version: '3.8'
 
@@ -103,10 +103,10 @@ networks:
     driver: bridge
 EOF
 
-# 设置权限
+# 
 chown -R ec2-user:ec2-user /home/ec2-user/app
 
-# 安装serve用于前端服务
+# serve
 npm install -g serve
 
 echo "Setup completed. Ready for deployment!"

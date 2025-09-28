@@ -248,7 +248,7 @@ const batchImportNews = async (newsList) => {
         title: savedIncident.title,
         id: savedIncident._id
       });
-      console.log(`✅ Imported: ${savedIncident.title}`);
+      console.log(` Imported: ${savedIncident.title}`);
     } catch (error) {
       results.push({
         success: false,

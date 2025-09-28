@@ -1,39 +1,39 @@
 #!/bin/bash
 
-# LLM Security Platform - 数据备份脚本
-# 用于备份MongoDB数据
+# LLM Security Platform - Data Backup Script
+# Backs up MongoDB data
 
-echo "💾 开始备份LLM Security Platform数据..."
+echo "Starting backup..."
 
-# 配置信息
+# Config
 KEY_PATH="/Users/angus/Study/COMPX527-25B/my-key.pem"
 PUBLIC_IP="98.87.249.41"
 EC2_USER="ec2-user"
 APP_DIR="/home/ec2-user/app"
 BACKUP_DIR="~/backups/$(date +%Y%m%d_%H%M%S)"
 
-echo "📡 连接到AWS实例: $PUBLIC_IP"
+echo "Connecting to AWS instance: $PUBLIC_IP"
 
-# 连接到EC2并备份数据
+# Connect and backup
 ssh -i "$KEY_PATH" "$EC2_USER@$PUBLIC_IP" << EOF
 cd ~/app
 
-echo "📁 创建备份目录..."
+echo "Creating backup directory..."
 mkdir -p $BACKUP_DIR
 
-echo "🗄️ 备份MongoDB数据..."
+echo "Backing up MongoDB..."
 docker exec llm-security-mongodb mongodump --db llm-security-platform --out /tmp/backup
 
-echo "📦 压缩备份文件..."
+echo "Compressing files..."
 docker cp llm-security-mongodb:/tmp/backup $BACKUP_DIR/
 cd $BACKUP_DIR
 tar -czf llm-security-backup.tar.gz backup/
 
-echo "🧹 清理临时文件..."
+echo "Cleaning up..."
 rm -rf backup/
 
-echo "✅ 备份完成！"
-echo "📂 备份位置: $BACKUP_DIR/llm-security-backup.tar.gz"
+echo "Backup done"
+echo "Location: $BACKUP_DIR/llm-security-backup.tar.gz"
 EOF
 
-echo "🎉 数据备份完成！"
+echo "Backup complete"

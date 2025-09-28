@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # MongoDB数据库
+  # MongoDB database
   mongodb:
     image: mongo:6.0
     container_name: llm-security-mongodb
@@ -23,7 +23,7 @@ services:
       timeout: 10s
       retries: 3
 
-  # 后端服务
+  # Backend service
   backend:
     build:
       context: ./backend
@@ -51,7 +51,7 @@ services:
       timeout: 10s
       retries: 3
 
-  # 前端服务
+  # Frontend service
   frontend:
     build:
       context: ./frontend
