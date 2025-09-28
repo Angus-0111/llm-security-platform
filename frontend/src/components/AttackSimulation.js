@@ -88,7 +88,7 @@ import {
 } from '@mui/icons-material';
 import { keyframes } from '@mui/system';
 
-// 动画定义
+// Animation definitions
 const float = keyframes`
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-5px); }
@@ -133,7 +133,7 @@ const AttackSimulation = () => {
   useEffect(() => {
     setMounted(true);
     
-    // 处理从 Learn 页面跳转过来的参数
+    // Handle parameters from Learn page navigation
     const urlParams = new URLSearchParams(location.search);
     const attackType = urlParams.get('attackType');
     const educationScenario = urlParams.get('educationScenario');
@@ -141,10 +141,10 @@ const AttackSimulation = () => {
     const attackPrompt = urlParams.get('attackPrompt');
     
     if (attackType || educationScenario || originalPrompt || attackPrompt) {
-      // 从 Learn 页面跳转过来，切换到 Custom 标签页
-      setActiveTab('custom'); // Custom 标签页
+      // Navigate from Learn page, switch to Custom tab
+      setActiveTab('custom'); // Custom tab
       
-      // 填充从 Learn 页面传来的参数
+      // Fill parameters from Learn page
       if (attackType) setCustomAttackType(attackType);
       if (educationScenario) setCustomEducationScenario(educationScenario);
       if (originalPrompt) setOriginalPrompt(originalPrompt);
