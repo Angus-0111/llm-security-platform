@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 3001;
 // Basic MongoDB connection
 const connectDatabase = async () => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/llm-security-platform';
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://admin:securepassword123@mongodb:27017/llm-security-platform?authSource=admin';
     await mongoose.connect(mongoURI);
     console.log('Database connected successfully');
   } catch (error) {
